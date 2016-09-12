@@ -1,0 +1,75 @@
+<html>
+<script src="/javascripts/reconnectingWebsocket.js"> </script>
+
+<head>
+
+
+</head>
+<body onload="load()">
+Test<br>
+
+<Table>
+
+
+    <tr>
+        <td>Name</td>
+        <td>State</td>
+        <td>Total on-time</td>
+        <td>kwh</td>
+        <td>timecurrentstate</td>
+        <td>timecurrentstate</td>
+
+    </tr>
+
+
+<%var things = global.settings.things;
+things.forEach(function(e){%>
+  <tr>
+      <td><%=((e.label) ? e.label : e.name)%></td>
+      <td><%=((e.currentstate && e.currentstate != 0) ? e.currentstate : "")%></td>
+      <td><%=((e.totalontime)? (e.totalontime/(60)).toFixed(1): '-')%></td>
+      <td><%=((e.kwhours)? (e.kwhours*1).toFixed(1) : '-')%></td>
+      <td><%=((e.currentstatetime) ? ((new Date() - e.currentstatetime.getTime())/3600000).toFixed(1):"")%></td>
+  </tr>
+
+
+
+
+<%})%>
+</Table>
+</body>
+</html>
+<script>
+
+    function load() {
+        things=<%-JSON.stringify(global.settings.things)%>
+                wsUri = "ws://" + window.location.hostname + ":8080";
+        ws = new ReconnectingWebSocket(wsUri);
+        ws.onopen = function(evt){
+            console.log("websocket connected")
+        };
+        ws.onmessage = function(evt) {
+
+            var x = JSON.parse(evt.data);
+            if (x.object == "settings.things"){
+                things = x.data;
+                //new things object - do something?
+                location.reload();
+
+        }
+        };
+
+    }
+
+
+
+    function websocketsend(type,data){
+
+        var sendobj = {};
+        sendobj.type = type;
+        sendobj.data = data;
+        ws.send(JSON.stringify(sendobj));
+
+    }
+
+</script>

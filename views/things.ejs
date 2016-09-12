@@ -1,0 +1,71 @@
+<html>
+<script src="/javascripts/reconnectingWebsocket.js"> </script>
+
+<head>
+
+
+</head>
+<body onload="load()">
+<%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
+%>
+<select onChange="thingselected(this)">
+   <%for (index = 0; index < things.length; ++index) {%>
+    <option value="<%=index%>">
+        <%=things[index].name%>
+    </option>
+    <%};%>
+
+</select>
+<div id="thinginfo">
+    divstuff
+
+</div>
+</body>
+</html>
+<script>
+function thingselected(e){
+    var x =document.getElementById("thinginfo");
+   var rv = '';
+    for (var prop in things[e.value]){
+       rv = rv + prop+":"+things[e.value][prop]+"<br>";
+
+
+   }
+
+
+    x.innerHTML =rv;
+
+
+}
+    function load() {
+        things=<%-JSON.stringify(things)%>
+                wsUri = "ws://" + window.location.hostname + ":8080";
+        ws = new ReconnectingWebSocket(wsUri);
+        ws.onopen = function(evt){
+            console.log("websocket connected")
+        };
+        ws.onmessage = function(evt) {
+
+            var x = JSON.parse(evt.data);
+            if (x.object == "settings.things"){
+                things = x.data;
+                //new things object - do something?
+              //  location.reload();
+
+        }
+        };
+
+    }
+
+
+
+    function websocketsend(type,data){
+
+        var sendobj = {};
+        sendobj.type = type;
+        sendobj.data = data;
+        ws.send(JSON.stringify(sendobj));
+
+    }
+
+</script>

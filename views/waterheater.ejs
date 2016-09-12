@@ -1,0 +1,97 @@
+<html>
+<script src="/javascripts/reconnectingwebsocket.js"> </script>
+<head>
+
+
+</head>
+<body onload="load()">
+webpage
+<table>
+    <tr>
+        <td>Date</td>
+        <td>User</td>
+        <td>Time</td>
+        <td>Cost</td>
+
+    </tr>
+
+
+<%s.forEach(function(v){%>
+<tr oncontextmenu="ctmenu('<%=v._id%>'); return false;">
+
+    <td><%=(v.ontime.getMonth()+1)+'/'+v.ontime.getDate()+' '+v.ontime.getHours()+':'+v.ontime.getMinutes()%></td>
+    <td><select onchange="namechange('<%=v._id%>',this.value)"  id ="user">
+        <option selected="selected" value ="<%=v.showeruser%>"><%=v.showeruser%></option>
+        <option value="TODD">TODD</option>
+        <option value="JJ">JJ</option>
+        <option value="TJ">TJ</option>
+        <option value="CASEY">CASEY</option>
+        <option value="COURTNEY">COURTNEY</option>
+        <option value="ADY">ADY</option>
+        <option value="">I dont know</option>
+
+
+        </td>
+    </select>
+
+    <td>
+        <input onchange="onminuteschange(this.name,this.value)" name ="<%=v._id%>" type='text' size='4' style='border-style:none;' value=<%=v.onminutes.toFixed(1)%>>
+
+        </td>
+    <td><%=v.gascost.toFixed(2)%></td>
+
+</tr>
+
+<%});%>
+<%=s[0].ontime.getHours()%>
+
+</table>
+
+
+</body>
+<script>
+    function load() {
+        console.log('onload');
+        wsUri = "ws://" + window.location.hostname + ":8080";
+        ws = new ReconnectingWebSocket(wsUri);
+        //ws = new WebSocket(wsUri);
+        ws.onopen = function(evt){
+            console.log("websocket connected");
+           // ws.send("test message");
+        };
+        ws.onmessage = function(evt) {
+
+         //   lightlevel = JSON.parse(evt.data);
+           // draw(floor);
+
+        };
+
+    }
+function namechange(id,value){
+        var sendobj ={};
+        sendobj.type ="shower";
+        sendobj.instruction = 'updateuser';
+        sendobj.id = id;
+        sendobj.user = value;
+        ws.send(JSON.stringify(sendobj));
+        console.log(id,value);
+    };
+function onminuteschange(id,value){
+    var sendobj ={};
+    sendobj.type ="shower";
+    sendobj.instruction = 'updateonminutes';
+    sendobj.id = id;
+    sendobj.onminutes = value;
+    ws.send(JSON.stringify(sendobj));
+        console.log(id,value);
+        location.reload();
+    };
+function ctmenu(id){
+    console.log('context menu'+id);
+    var sendobj ={};
+    sendobj.type ="shower";
+    sendobj.instruction = 'duplicate';
+    sendobj.id = id;
+    ws.send(JSON.stringify(sendobj));
+    location.reload();}
+</script>
