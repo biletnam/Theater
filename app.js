@@ -32,6 +32,5 @@ function mongostarted(returnedsettings){
       // the settings object is loaded - init whatever else
 
 
-
     }
 }
