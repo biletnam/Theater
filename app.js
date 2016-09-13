@@ -11,7 +11,7 @@
 
 smartthings=require('l451lib').smartthingslink;
 sth=require('./smartthingshandler.js');
-smartthings.start(sth.stEvent,8180);
+smartthings.start(sth.stEvent,8200);
 ll = require('./llib.js');
 // start mongo and load a settings object - passing the database name , and a call back
 ll.startmongo('theatersettings',mongostarted);
