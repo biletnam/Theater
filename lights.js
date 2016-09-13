@@ -14,6 +14,7 @@ for(var i = 0; i < buffer.length; i+=3){
     buffer[i+2]=50;
 }
 
+
 writeSPI();
 
 fadeSimple(20,25,.1,10);
