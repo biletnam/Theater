@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="rpi3">
+  <component name="PublishConfigData" serverName="rpi3" showNewOnSourceInSync="false">
     <serverData>
       <paths name="rpi3">
         <serverdata>
