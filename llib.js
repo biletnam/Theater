@@ -40,7 +40,7 @@ exports.startmongo = function(collectionname,callback) {
     });
 };
 exports.savesettings = function(){
-    db.collection('settings').update({'type':'settings'},settings,{upsert:true, w:1},function(err,res){
+    db.collection('settings').updateOne({'type':'settings'},settings,{upsert:true, w:1},function(err,res){
         //console.log('Gatherer Setting updated');
         if (err){
             console.log('failure writing settings to mongo -- aborting');

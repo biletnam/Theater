@@ -21,7 +21,7 @@ function mongostarted(returnedsettings){
         settings.type = "settings";
         settings.things = [];
         console.error("Gatherer Settings missing attempting to create the database...");
-        db.collection('settings').insert(settings, function (err, res) {
+        db.collection('settings').insertOne(settings, function (err, res) {
             console.log("Gatherer settings created " + res);
             console.log("please RESTART");
             // exit node with error
