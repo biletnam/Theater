@@ -6,7 +6,7 @@
 // we use it to start mongo and retrieve the settings object
 
 
-//Initialization Secion
+//Initialization Section
 // ll - llib is the local library
 smartthings=require('l451lib').smartthingslink;
 sth=require('./smartthingshandler.js');
@@ -33,7 +33,6 @@ function mongostarted(returnedsettings){
     } else
     {
       // the settings object is loaded - init whatever else
-
 
 
     }
