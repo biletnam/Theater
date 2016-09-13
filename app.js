@@ -8,6 +8,7 @@
 
 //Initialization Section
 // ll - llib is the local library
+
 smartthings=require('l451lib').smartthingslink;
 sth=require('./smartthingshandler.js');
 smartthings.start(sth.stEvent,8180);
