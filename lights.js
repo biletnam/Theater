@@ -12,7 +12,6 @@ for(var i = 0; i < buffer.length; i+=3){
     buffer[i]=200;
     buffer[i+1]=100;
     buffer[i+2]=50;
-
 }
 
 writeSPI();
