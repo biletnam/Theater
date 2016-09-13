@@ -13,9 +13,9 @@
     "mongodb": "^2.1.7",
     "pmp": "^0.5.0",
     "l451lib": "~0.0.4",
-    "request": "^2.69.0",
-    "serialport":"2.0.6",
-    "node-cloud-vision-api":"^0.2.0"
+    "request": "^2.69.0"
+
+
 
 
   }
