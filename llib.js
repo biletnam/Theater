@@ -17,7 +17,7 @@ exports.startmongo = function(collectionname,callback) {
     MC.connect('mongodb://localhost:27017/'+collectionname, function (err, db) {
 
         if (!err) {
-            console.log("MongoDB Connected:" + db);
+            console.log("MongoDB Connected:");
             global.db = db;
             //load setting database into memory
 
