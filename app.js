@@ -6,7 +6,7 @@
 // we use it to start mongo and retrieve the settings object
 
 
-//Initialization Secion
+//Initialization Section
 // ll - llib is the local library
 ll = require('./llib.js');
 // start mongo and load a settings object - passing the database name , and a call back
