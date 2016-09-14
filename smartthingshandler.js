@@ -2,17 +2,15 @@
  * Created by todd on 3/14/2016.
  */
 
-waterheater ={};
-waterheater.on = false;
 var fs = require('fs');
 var request = require('request');
-
-fs.readFile("settings.json", 'utf8', function(err, data) {
-    if (err) throw err;
-    stsettings = JSON.parse(data);
+//
+// fs.readFile("settings.json", 'utf8', function(err, data) {
+//     if (err) throw err;
+//     stsettings = JSON.parse(data);
     //console.log('settings:'+JSON.stringify(stsettings.things.devices[0]));
     //console.log('settings:'+stsettings.things.devices.length);
-});
+//});
 exports.addchild = function(obj){
 
     if (obj.id ){
@@ -59,7 +57,7 @@ exports.addchild = function(obj){
 };
 exports.stEvent =function(data){
 
-    // console.log(data);
+     console.log(data);
 
 
     if (data.id){
