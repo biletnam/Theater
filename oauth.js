@@ -18,10 +18,10 @@ var debug   = require('debug')('http');
 var config = {
     port: process.env.PORT || 8100,
     api_root: 'https://graph.api.smartthings.com',
-    server_address: '68.104.0.250:8100',
+    server_address: 'http://68.104.0.250:8100',
     oauth: {
-        clientID: '9caee22f-7595-45a8-b9d4-c3fc279a01e2',
-        clientSecret: 'a9dfaafc-9779-4f4d-88f0-fd8bb866d154',
+        clientID: '005e9c5b-4d6b-4c3e-b3f2-7f2318ccfca9',
+        clientSecret: 'd94e0a64-ae66-414b-b0dd-493a22fd4ec4',
         site: 'https://graph.api.smartthings.com',
         tokenPath: '/oauth/token'
     }
