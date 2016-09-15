@@ -9,14 +9,12 @@
     "body-parser": "^1.15.0",
     "ejs": "^2.3.1",
     "express": "^4.12.3",
+    "googleapis": "^13.0.0",
     "harmonyhubjs-client": "^1.1.8",
+    "l451lib": "~0.0.4",
     "mongodb": "^2.1.7",
     "pmp": "^0.5.0",
-    "l451lib": "~0.0.4",
-    "request": "^2.69.0"
-
-
-
-
+    "request": "^2.69.0",
+    "simple-oauth2": "0.2.1"
   }
 }
