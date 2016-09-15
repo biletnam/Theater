@@ -18,10 +18,10 @@ var debug   = require('debug')('http');
 var config = {
     port: process.env.PORT || 8100,
     api_root: 'https://graph.api.smartthings.com',
-    server_address: 'http://level451.com:8100',
+    server_address: '68.104.0.250:8100',
     oauth: {
-        clientID: 'a79c4cfa-1ad6-4da9-a858-a8ed2436af42',
-        clientSecret: '34554b8c-f843-4e5d-81f7-362c6fa73d27',
+        clientID: '9caee22f-7595-45a8-b9d4-c3fc279a01e2',
+        clientSecret: 'a9dfaafc-9779-4f4d-88f0-fd8bb866d154',
         site: 'https://graph.api.smartthings.com',
         tokenPath: '/oauth/token'
     }
@@ -45,6 +45,7 @@ app.get('/', function (req, res) {
 
 app.get('/auth', function (req, res) {
     // redirect to SmartThings auth uri
+    console.log(authorization_uri)
     res.redirect(authorization_uri);
 });
 
