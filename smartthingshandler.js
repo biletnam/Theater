@@ -4,13 +4,16 @@
 
 var fs = require('fs');
 var request = require('request');
-//
-// fs.readFile("settings.json", 'utf8', function(err, data) {
-//     if (err) throw err;
-//     stsettings = JSON.parse(data);
+
+fs.readFile("settings.json", 'utf8', function(err, data) {
+    if (err) throw err;
+    stsettings = JSON.parse(data);
+    console.log('Loaded smartthings settings from file') // possible move this to be from the settings database
+    console.log('Smartthings Authorization Token:'+stsettings.token);
+    console.log('Smartthings Rest Uri:'+stsettings.restUri)
     //console.log('settings:'+JSON.stringify(stsettings.things.devices[0]));
     //console.log('settings:'+stsettings.things.devices.length);
-//});
+});
 exports.addchild = function(obj){
 
     if (obj.id ){
@@ -60,10 +63,11 @@ exports.stEvent =function(data){
      console.log(data);
 
 
-    if (data.id){
+    if (data.id){ // received something with and id
         // check to see if we can find the object
         var o = ll.getthingbystid(data.id); // look up the child by smarthings ID
         if (o){
+            // found the object in the database
             console.log('found:'+ o.name);
             if(o.issmartthingchild){
                 // child objject execute command
@@ -320,7 +324,16 @@ exports.stEvent =function(data){
 
 
 
+        }else {
+            // didn't find the object in the database
+            // id not found
+            // refresh the database from smartthings data
+            module.exports.addthingsfromst();
+
+
         }
+
+
 
 //           console.log('here id:'+data.id);
 //           if (data.id == "3e31910e-b979-47ab-bf67-693701986964" ){
@@ -349,8 +362,6 @@ exports.stEvent =function(data){
 //       }
 
     }
-
-
 
 
 
@@ -495,6 +506,8 @@ exports.addthingsfromst = function (){
 
 
 // get all the things from smartthings
+console.log('Updating the Things database ...');
+console.log('Request all controlled objects from Smartthings ...')
 
     var request_options = {
         headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}
@@ -502,12 +515,11 @@ exports.addthingsfromst = function (){
 
     request_options.uri = stsettings.restUri + '/things';
     request(request_options,function(error, response, data){
+        console.log('Recieved data back from Smartthings - processing ...')
         var s =  JSON.parse(data);
 
-
-
         s.devices.forEach(function(e){
-            //  console.log(JSON.stringify(e));
+              console.log(JSON.stringify(e));
             ll.writething(e,true,true);
 
         });
