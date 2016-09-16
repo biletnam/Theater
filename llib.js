@@ -166,8 +166,7 @@ exports.executecommand = function(obj,command,value,delay){
         if (cmd.sendto == 'vantage'){
             serial.write(cmd.command.replace("{value}",value));
 
-        } else
-        if (cmd.sendto == "smartthings"){
+        } else if (cmd.sendto == "smartthings"){
 //
             var request_options = {
                 headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}

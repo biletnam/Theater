@@ -35,6 +35,6 @@ function mongostarted(returnedsettings){
         sth=require('./smartthingshandler.js');
         smartthings.start(sth.stEvent,8200);
 
-//   ll.executecommand(ll.getthingbylabel('Switch 3'),'Switch',100);
+   ll.executecommand(ll.getthingbylabel('Switch 3'),'Switch',0);
     }
 }
