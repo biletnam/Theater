@@ -5,7 +5,7 @@ exports.start = function(callback,port) {
     if (!port){
         port = 8200
     }
-    console.log('RGGB LED Server api listening on '+port);
+    console.log('RGB LED Server api listening on '+port);
     var apihttp = require("http");
     apihttp.createServer(function (req, res) {
         //console.log("Rest server:" + req.url + "(" + req.method + ")");

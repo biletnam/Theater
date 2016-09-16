@@ -3,21 +3,42 @@
  */
 //open spi port
 var SPI = require('pi-spi');
-var numberLEDS = 32;
+var numberLEDS = 10;
 var buffer = new Buffer(3*numberLEDS);
 var array = new Array(3*numberLEDS);
 var spi = SPI.initialize("/dev/spidev0.0");
 spi.clockSpeed(2e6); //2 mHZ
 for(var i = 0; i < buffer.length; i+=3){
-    buffer[i]=200;
-    buffer[i+1]=100;
-    buffer[i+2]=50;
+    buffer[i]=0;
+    buffer[i+1]=0;
+    buffer[i+2]=0;
 }
 
 writeSPI();
+server = require('./rgbledserver.js');
+server.start(receivedcommand,8201);
+function receivedcommand(o){
+    if (o.command == 'ledSetColor' ){
+        ledSetColor (o.led,o.r,o.g,o.b);
+        writeSPI();
 
-fadeSimple(20,25,.1,10);
-fadeColor(5,10,255,0,200,10);
+    } else if (o.command == 'ledSetColor' ){
+
+
+
+    }
+
+
+    console.log(o);
+
+
+
+}
+
+
+
+//fadeSimple(20,25,.1,10);
+//fadeColor(5,10,255,0,200,10);
 
 function copyBuffer(){
     for(var i = 0; i< buffer.length; i++){
