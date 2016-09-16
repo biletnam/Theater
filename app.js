@@ -9,9 +9,6 @@
 //Initialization Section
 // ll - llib is the local library
 
-smartthings=require('l451lib').smartthingslink;
-sth=require('./smartthingshandler.js');
-smartthings.start(sth.stEvent,8200);
 ll = require('./llib.js');
 // start mongo and load a settings object - passing the database name , and a call back
 ll.startmongo('theatersettings',mongostarted);
@@ -34,7 +31,10 @@ function mongostarted(returnedsettings){
     } else
     {
       // the settings object is loaded - init whatever else
+        smartthings=require('l451lib').smartthingslink;
+        sth=require('./smartthingshandler.js');
+        smartthings.start(sth.stEvent,8200);
 
-
+//   ll.executecommand(ll.getthingbylabel('Switch 3'),'Switch',100);
     }
 }

@@ -2,7 +2,14 @@
  * Created by todd on 11/4/2015.
  */
 global.settings ={};
-var fs = require('fs');
+ll = require('./llib.js');
+ll.startmongo('theatersettings',mongostarted);
+function mongostarted(returnedsettings){
+    global.settings = returnedsettings;
+}
+
+
+//var fs = require('fs');
 // fs.readFile("settings.json", 'utf8', function(err, data) {
 //     if (err) throw err;
 //     //console.log('OK: ' + filename);
@@ -15,7 +22,12 @@ var fs = require('fs');
 var debug   = require('debug')('http');
 
 // Application Configuration
-var config = {
+/*
+
+            CONFIG STEVE
+
+ */
+var steveconfig = {
     port: process.env.PORT || 8100,
     api_root: 'https://graph.api.smartthings.com',
     server_address: 'http://68.104.0.250:8100',
@@ -26,6 +38,33 @@ var config = {
         tokenPath: '/oauth/token'
     }
 }
+/*
+
+            CONFIG TODD
+
+ */
+var toddconfig = {
+    port: process.env.PORT || 8100,
+    api_root: 'https://graph.api.smartthings.com',
+    server_address: 'http://level451.com:8100',
+    oauth: {
+        clientID: 'a79c4cfa-1ad6-4da9-a858-a8ed2436af42',
+        clientSecret: '34554b8c-f843-4e5d-81f7-362c6fa73d27',
+        site: 'https://graph.api.smartthings.com',
+        tokenPath: '/oauth/token'
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// set config here
+var config = steveconfig
+//var config = toddconfig
+console.log('Goto this website:'+ config.server_address)
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 var express = require('express');
 var request = require('request');
@@ -48,7 +87,7 @@ app.get('/auth', function (req, res) {
     console.log(authorization_uri)
     res.redirect(authorization_uri);
 });
-
+var stsettings = {}
 
 
 app.get('/callback', function (req, res) {
@@ -67,7 +106,7 @@ app.get('/callback', function (req, res) {
         // extract auth token
         var token = oauth2.accessToken.create(result);
         console.log('token:'+token.token.access_token);
-        settings.token = token.token.access_token;
+        stsettings.token = token.token.access_token;
 
         // setup request options with uri to get this app's endpoints
         // and add retrieved oauth token to auth header
@@ -75,30 +114,36 @@ app.get('/callback', function (req, res) {
             uri: config.api_root+'/api/smartapps/endpoints',
             headers: { Authorization: 'Bearer '+token.token.access_token }
         }
-            settings.smartthingsoauthtoken=token.token.access_token;
+            stsettings.smartthingsoauthtoken=token.token.access_token;
         request(request_options, function(error, response, body) {
             if (error) { console.log('Endpoints Request Error', error); }
 
             // extract the app's unique installation url
             var installation_url = JSON.parse(body)[0]['url'];
-            settings.restUri =  config.api_root+installation_url;
-            console.log('installation_url'+settings.restUri);
+            stsettings.restUri =  config.api_root+installation_url;
+            console.log('installation_url'+stsettings.restUri);
             // reuse request options with new uri for the "things" endpoint
             // specific to this app installation
             request_options.uri = config.api_root + installation_url + '/things'
             console.log('request_options.uri:'+request_options.uri);
             request(request_options, function(error, response, body){
                 var all_things = JSON.parse(body);
-                settings.things = all_things;
+                stsettings.things = all_things;
 
-                res.json(settings); // send JSON of all things
-                fs.writeFile("settings.json", JSON.stringify(settings), function(err) {
-                    if(err) {
-                        return console.log(err);
-                    }
+                res.json(stsettings); // send JSON of all things
 
-                    console.log("Settings saved to disk!");
-                });
+                    // update settings and save (mongo)
+                settings.stsettings = stsettings;
+                ll.savesettings();
+
+
+                // fs.writeFile("settings.json", JSON.stringify(settings), function(err) {
+                //     if(err) {
+                //         return console.log(err);
+                //     }
+                //
+                //     console.log("Settings saved to disk!");
+                // });
 
 
             });

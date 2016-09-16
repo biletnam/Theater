@@ -2,18 +2,19 @@
  * Created by todd on 3/14/2016.
  */
 
-var fs = require('fs');
+
 var request = require('request');
 
-fs.readFile("settings.json", 'utf8', function(err, data) {
-    if (err) throw err;
-    stsettings = JSON.parse(data);
+
+
+    stsettings = settings.stsettings;
     console.log('Loaded smartthings settings from file') // possible move this to be from the settings database
     console.log('Smartthings Authorization Token:'+stsettings.token);
     console.log('Smartthings Rest Uri:'+stsettings.restUri)
+
     //console.log('settings:'+JSON.stringify(stsettings.things.devices[0]));
     //console.log('settings:'+stsettings.things.devices.length);
-});
+
 exports.addchild = function(obj){
 
     if (obj.id ){

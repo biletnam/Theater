@@ -63,6 +63,19 @@ exports.getthingbyid = function(inid){
 
     return returnvalue;
 };
+exports.getthingbylabel = function(inlabel){
+    var returnvalue = false;
+
+
+    settings.things.some(function(e){
+        if (e.label == inlabel){
+            returnvalue = e;
+            return true;
+        }
+    });
+
+    return returnvalue;
+};
 exports.getthingbystid = function(inid){
     var returnvalue = false;
 
@@ -131,7 +144,7 @@ exports.executecommand = function(obj,command,value,delay){
     console.log('exec command');
 
     if (typeof(obj) != "object"){
-        obj=this.getthingbyid();
+        obj=this.getthingbyid(obj);
 
 
     }
