@@ -3,7 +3,7 @@
  */
 exports.start = function(callback,port) {
     if (!port){
-        port = 8200
+        port = 8201
     }
     console.log('RGB LED Server api listening on '+port);
     var apihttp = require("http");

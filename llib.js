@@ -192,6 +192,23 @@ exports.executecommand = function(obj,command,value,delay){
 
 
 
+        } else if (cmd.sendto == "RGBLED")
+        {
+            console.log(cmd)
+            request_options = {}
+            request_options.uri = cmd.sendtoaddress;
+            request_options.json = cmd.command;
+            request_options.json.led = 2
+            request_options.json.value = value;
+
+
+            request(request_options,function(error, response, body){
+                console.log('command sent to RGBLED');
+            });
+
+
+
+
         } else
         {
             console.log('unknown sendto:'+sendto)

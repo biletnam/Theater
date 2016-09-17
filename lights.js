@@ -19,7 +19,7 @@ server = require('./rgbledserver.js');
 server.start(receivedcommand,8201);
 function receivedcommand(o){
     if (o.command == 'ledSetColor' ){
-        ledSetColor (o.led,o.r,o.g,o.b);
+        ledSetColor (o.led,o.value);
         writeSPI();
 
     } else if (o.command == 'ledSetColor' ){
@@ -110,9 +110,21 @@ function writeSPI(){ //sends entire buffer to led strip
     });
 }
 
-function ledSetColor(number,r,g,b){ // first led is led 1  //
+function ledSetColor(number,value){ // first led is led 1  //
     number = (number-1)*3;
-    buffer[number] = b;
-    buffer[number +1] = g;
-    buffer[number +2] = r;
+
+    if (typeof(value) == 'number'){
+
+        buffer[number] = value;
+        buffer[number +1] = value;
+        buffer[number +2] = value;
+
+    }else
+    {
+
+
+        buffer[number] = value[2];
+        buffer[number +1] = value[1];
+        buffer[number +2] = value[0];
+    }
 }
