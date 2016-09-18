@@ -1,5 +1,5 @@
 /**
- * Created by todd on 9/16/2016.
+ * Created by todd on 9/16/2016. A
  */
 exports.start = function(callback,port) {
     if (!port){
@@ -22,6 +22,7 @@ exports.start = function(callback,port) {
             //console.log(body);
             callback(JSON.parse(body));
             //console.log (stdata.device+ ' '+stdata.value);
+            res.write(body);
             res.end();
 
         });

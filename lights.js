@@ -1,5 +1,5 @@
 /**
- * Created by steve on 9/9/2016.
+ * Created by steve on 9/9/2016. A
  */
 //open spi port
 var SPI = require('pi-spi');
@@ -22,8 +22,15 @@ function receivedcommand(o){
         ledSetColor (o.led,o.value);
         writeSPI();
 
-    } else if (o.command == 'ledSetColor' ){
+    } else if (o.command == 'setlevel' ){
+        console.log(o);
+        console.log(o.obj)
+        for (var i = o.obj.startled; i <= o.obj.endled; i++){
 
+            ledSetColor (i,o.value);
+        }
+
+        writeSPI();
 
 
     }

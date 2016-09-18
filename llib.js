@@ -200,10 +200,44 @@ exports.executecommand = function(obj,command,value,delay){
             request_options.json = cmd.command;
             request_options.json.led = 2
             request_options.json.value = value;
+            request_options.json.obj = obj;
 
 
             request(request_options,function(error, response, body){
-                console.log('command sent to RGBLED');
+                // mayby the
+                if (body){
+                    console.log('command sent to RGBLED');
+                    console.log(body.command);
+                    var o = body.obj;
+                    if (o.issmartthingchild) {
+                        //
+                        var request_options = {
+                            headers: { Authorization: 'Bearer ' + settings.stsettings.smartthingsoauthtoken}
+                        };
+                        request_options.uri = stsettings.restUri+ '/update';
+                        request_options.json = {
+                            id: o.stid,// vantage light aa look at me
+                           // this command
+                            command:"setlevel",
+
+                            value: body.value
+                            // value: evt[4]
+                        };
+
+
+                        request(request_options,function(error, response, body){
+
+                            console.log('Sent status change to SmartThings for:'+ o.name+' Response:'+JSON.stringify(body));
+
+
+
+
+                        });
+                        //
+                    }
+                }
+
+
             });
 
 
@@ -217,6 +251,10 @@ exports.executecommand = function(obj,command,value,delay){
 
 
 
+    } else {
+
+        console.log ('command not found:'+command)
+        console.log ('object:'+obj.name)
     }
 
 
