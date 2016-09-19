@@ -36,10 +36,10 @@ function mongostarted(returnedsettings){
         smartthings.start(sth.stEvent,8200);
 
  //  ll.executecommand(ll.getthingbylabel('Switch 3'),'Switch',100);
-      addtestrbgled();
+     // addtestrbgled();
         //ll.executecommand(ll.getthingbyid(1000),'setledcolor',[0,100,0]);
        // ll.executecommand(ll.getthingbyid(1000),'setledcolor',1);
-        sth.addchild(ll.getthingbyid("1000"));
+     //   sth.addchild(ll.getthingbyid("1000"));
     }
 }
 
@@ -53,15 +53,21 @@ function addtestrbgled(){
     o.namespace ="level451";
     o.commands = [];
     o.commands[0]= {};
-    o.commands[0].name = 'setlevel'
-    o.commands[0].sendto = "RGBLED"
-    o.commands[0].sendtoaddress = 'http://10.6.1.32:8201'
-    o.commands[0].command = { command: 'setlevel'}
+    o.commands[0].name = 'setlevel';
+    o.commands[0].sendto = "RGBLED";
+    o.commands[0].sendtoaddress = 'http://10.6.1.32:8201';
+    o.commands[0].command = { command: 'setlevel'};
     o.commands[1]= {};
-    o.commands[1].name = 'setledcolor'
-    o.commands[1].sendto = "RGBLED"
-    o.commands[1].sendtoaddress = 'http://10.6.1.32:8201'
-    o.commands[1].command = { command: 'ledSetColor'}
+    o.commands[1].name = 'setledcolor';
+    o.commands[1].sendto = "RGBLED";
+    o.commands[1].sendtoaddress = 'http://10.6.1.32:8201';
+    o.commands[1].command = { command: 'ledSetColor'};
+    o.commands[2]= {};
+    o.commands[2].name = 'setcolor';
+    o.commands[2].sendto = "RGBLED";
+    o.commands[2].sendtoaddress = 'http://10.6.1.32:8201';
+    o.commands[2].command = { command: 'setcolor'} ;
+
     ll.writething(o,true);
 
 

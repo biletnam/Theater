@@ -202,12 +202,13 @@ exports.executecommand = function(obj,command,value,delay){
             request_options.json.value = value;
             request_options.json.obj = obj;
 
-
+            // send the command to our RGB Controller
             request(request_options,function(error, response, body){
-                // mayby the
+                // we get here if the RBG server reponds or it errors out
                 if (body){
+                    // if we get a body the server responded
                     console.log('command sent to RGBLED');
-                    console.log(body.command);
+                    //console.log(body.command);
                     var o = body.obj;
                     if (o.issmartthingchild) {
                         //
@@ -218,7 +219,7 @@ exports.executecommand = function(obj,command,value,delay){
                         request_options.json = {
                             id: o.stid,// vantage light aa look at me
                            // this command
-                            command:"setlevel",
+                            command:command,
 
                             value: body.value
                             // value: evt[4]
