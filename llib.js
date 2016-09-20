@@ -153,7 +153,7 @@ exports.executecommand = function(obj,command,value,delay){
 
     var cmd = false;
 
-    console.log("execute command:"+command+" val:"+value+' name:'+obj.name);
+   // console.log("execute command:"+command+" val:"+value+' name:'+obj.name);
     obj.commands.some(function(e) {
         if (e.name == command) {
             cmd = e;

@@ -61,7 +61,7 @@ exports.addchild = function(obj){
 };
 exports.stEvent =function(data){
 
-     console.log(data);
+     //console.log(data);
 
 
     if (data.id){ // received something with and id
@@ -69,10 +69,12 @@ exports.stEvent =function(data){
         var o = ll.getthingbystid(data.id); // look up the child by smarthings ID
         if (o){
             // found the object in the database
-            console.log('found:'+ o.name);
+            console.log('Command from SmartThings for thing:'+ o.name);
             if(o.issmartthingchild){
                 // child objject execute command
-                console.log('data.command'+data.command);
+                console.log('data.command:'+data.command);
+                console.log('data.value:'+data.value);
+
                 ll.executecommand(o,data.command,data.value);
                 //serial.write("VLC 1 65 1 0 0\r");
 
