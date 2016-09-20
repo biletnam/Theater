@@ -21,7 +21,7 @@ exports.addchild = function(obj){
         // tell smarthings to add the child
 
         var request_options = {
-            headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}
+            headers: { Authorization: 'Bearer ' + settings.stsettings.smartthingsoauthtoken}
         };
 
         request_options.uri = stsettings.restUri + '/createchild';

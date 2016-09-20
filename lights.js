@@ -8,6 +8,10 @@ var buffer = new Buffer(3*numberLEDS);
 var array = new Array(3*numberLEDS);
 var spi = SPI.initialize("/dev/spidev0.0");
 spi.clockSpeed(2e6); //2 mHZ
+server = require('./rgbledserver.js');
+server.start(receivedcommand,8201);
+
+
 for(var i = 0; i < buffer.length; i+=3){
     buffer[i]=0;
     buffer[i+1]=0;
@@ -15,8 +19,7 @@ for(var i = 0; i < buffer.length; i+=3){
 }
 
 writeSPI();
-server = require('./rgbledserver.js');
-server.start(receivedcommand,8201);
+
 function receivedcommand(o){
     if (o.command == 'ledSetColor' ){
         ledSetColor (o.led,o.value);
