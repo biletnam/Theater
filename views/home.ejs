@@ -1,11 +1,52 @@
 <!DOCTYPE html>
+
+
+<script  src = "/javascripts/TheaterMenu.js"> </script>
+<link rel='stylesheet'  href='/stylesheets/Menu.css'>
+<link rel='stylesheet'  href='/stylesheets/Home.css'>
+
+
 <html>
+
 <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <title>Theater System Home</title>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+
 </head>
-<body>
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+
+
+
+<body class = "body" id = "body">
+
+<h1>Welcome To The Theater System</h1>
+
+<header class="mainheader">
+    <div id="menubutton">
+        <button id = "buttonMenu"  onmousedown = "buttonMenu()"><span id="buttontext">|||</span></button>
+    </div>
+    <nav id = "menunav">
+        <ul>
+            <li class="active"><a href="Home">Home</a></li>
+            <li><a href="Lights" >Lights</a></li>
+            <li><a href="SmartThings" >SmartThings</a></li>
+            <li><a href="Harmony">Harmony</a></li>
+            <li><a href="TheaterSettings">Settings</a></li>
+            <li><a href="./images/TheaterHelp.pdf" target="_blank">Help</a></li>
+        </ul>
+    </nav>
+</header>
+
+
+
+<pre>
+            <div id="websocketlog" class="log">
+                <h4> Waiting for connection...</h4>
+            </div>
+        </pre>
+
+
+
+
 </body>
 </html>

@@ -60,6 +60,10 @@ exports.start = function(callback) {
 
     });
 
+    app.get('/home', function (req, res) {
+        res.render('home.ejs',{things:global.settings.things});
+    });
+
 
     app.post('/cam/upload',bodyParser.raw({ limit: '50mb',type: 'image/jpeg' }), function(req, res){
         //console.log(req.headers) // form fields

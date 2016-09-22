@@ -91,7 +91,7 @@ function addtestrbgled(){
     o.commands[2].sendtoaddress = 'http://192.168.2.71:8201';
     o.commands[2].command = { command: 'setcolor'} ;
 
-    ll.writething(o,true);
+    ll.writething(o,true);//modifies record in  mongo
 
 
 

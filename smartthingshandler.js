@@ -37,6 +37,7 @@ exports.addchild = function(obj){
 
         request(request_options,function(error, response, data){
             //console.log('addchild '+stsettings.url,error);
+            console.log("Data: " + data);
             if (data.newdevice){
                 console.log("Added NEW Child Device")
             } else
