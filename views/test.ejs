@@ -43,7 +43,7 @@ things.forEach(function(e){%>
 
     function load() {
         things=<%-JSON.stringify(global.settings.things)%>
-                wsUri = "ws://" + window.location.hostname + ":8080";
+                wsUri = "ws://" + window.location.hostname + ":8082";
         ws = new ReconnectingWebSocket(wsUri);
         ws.onopen = function(evt){
             console.log("websocket connected")

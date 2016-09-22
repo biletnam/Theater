@@ -39,7 +39,7 @@ function thingselected(e){
 }
     function load() {
         things=<%-JSON.stringify(things)%>
-                wsUri = "ws://" + window.location.hostname + ":8080";
+                wsUri = "ws://" + window.location.hostname + ":8280";
         ws = new ReconnectingWebSocket(wsUri);
         ws.onopen = function(evt){
             console.log("websocket connected")

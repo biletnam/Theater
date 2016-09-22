@@ -12,6 +12,29 @@
 ll = require('./llib.js');
 // start mongo and load a settings object - passing the database name , and a call back
 ll.startmongo('theatersettings',mongostarted);
+// open up some ports for the webserver
+
+externalIpAddress = 'localhost';
+ll.mapExternalPorts(function(externip){
+// opens the ports 8282 and 8280 on the gateway
+// 8280 is used for websockets
+//8282 is the webserver
+
+
+    externalIpAddress = externip;
+});
+// get the websocket handler going
+websock=require('l451lib').websocket;
+wsh = require('./websockethandler');
+websock.start(wsh.wsData,8280);
+
+// start the webserver on port 8282
+webserver = require('./webserver.js');
+webserver.start(function(rslt){console.log(rslt)});
+
+
+
+
 
 
 // all initialization that needs mongo started goes here
@@ -39,7 +62,7 @@ function mongostarted(returnedsettings){
       //addtestrbgled(); // add to database - run once
         //ll.executecommand(ll.getthingbyid(1000),'setledcolor',[0,100,0]);
        // ll.executecommand(ll.getthingbyid(1000),'setledcolor',1);
-       sth.addchild(ll.getthingbyid("1000"));
+       //sth.addchild(ll.getthingbyid("1000"));
     }
 }
 

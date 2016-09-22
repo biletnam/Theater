@@ -261,5 +261,32 @@ exports.executecommand = function(obj,command,value,delay){
 
 };
 
+exports.mapExternalPorts = function(callback){
+    var pmp = require('pmp');
 
+    pmp.findGateway("",function(err,gateway) {
+        if (err) {
+            console.log('Gateway not found', err);
+        }
+        else {
+            console.log('gateway found: '+ gateway.ip + ", External IP: "+ gateway.externalIP);
+// updated 0 to 999999 7/8/2016
+            pmp.portMap(gateway,8282,8282,999999,'webservertheater',function(err,rslt){
+                if (err) {
+                    console.log('error opening port 3000', err);
+                }
+                else {
+                    // updated 0 to 999999 7/8/2016
+                    pmp.portMap(gateway, 8280, 8280, 999999, 'websocktheater', function (err, rslt) {
+                        callback(gateway.externalIP);
+
+                    });
+                }
+            });
+        }
+    });
+
+
+
+};
 
