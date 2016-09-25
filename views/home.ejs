@@ -2,19 +2,22 @@
 
 
 <script  src = "/javascripts/TheaterMenu.js"> </script>
+<script  src = "/javascripts/Home.js"> </script>
 <link rel='stylesheet'  href='/stylesheets/Menu.css'>
 <link rel='stylesheet'  href='/stylesheets/Home.css'>
-
+<script src="/javascripts/reconnectingWebsocket.js"> </script>
 
 <html>
 
+<script>
+    things=<%-JSON.stringify(things)%>
+</script>
 <head>
 
     <title>Theater System Home</title>
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
 
 </head>
-
 
 
 <body class = "body" id = "body">
@@ -32,6 +35,7 @@
             <li><a href="SmartThings" >SmartThings</a></li>
             <li><a href="Harmony">Harmony</a></li>
             <li><a href="TheaterSettings">Settings</a></li>
+            <li><a href="Things">Things</a></li>
             <li><a href="./images/TheaterHelp.pdf" target="_blank">Help</a></li>
         </ul>
     </nav>

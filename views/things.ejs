@@ -1,26 +1,57 @@
 <html>
 <script src="/javascripts/reconnectingWebsocket.js"> </script>
+<script  src = "/javascripts/TheaterMenu.js"> </script>
+<link rel='stylesheet'  href='/stylesheets/Menu.css'>
 
 <head>
 
 
 </head>
+
+
+
 <body onload="load()">
 <%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
 %>
-<select id="selectedthing" onChange="thingselected(this)">
-    <%for (index = 0; index < things.length; ++index) {%>
-    <option value="<%=index%>">
-        <%=things[index].name%>
-    </option>
-    <%};%>
 
-</select>
+<header class="mainheader">
+    <div id="menubutton">
+        <button id = "buttonMenu"  onmousedown = "buttonMenu()"><span id="buttontext">|||</span></button>
+    </div>
+    <nav id = "menunav">
+        <ul>
+            <li><a href="Home">Home</a></li>
+            <li><a href="Lights" >Lights</a></li>
+            <li><a href="SmartThings" >SmartThings</a></li>
+            <li><a href="Harmony">Harmony</a></li>
+            <li><a href="TheaterSettings">Settings</a></li>
+            <li class="active"><a href="Things">Things</a></li>
+            <li><a href="./images/TheaterHelp.pdf" target="_blank">Help</a></li>
+        </ul>
+    </nav>
+</header>
+
+<edit_space>
+    <label > Please Select Item To Edit</label>
+    <select id="selectedthing" onChange="thingselected(this)">
+        <%for (index = 0; index < things.length; ++index) {%>
+        <option value="<%=index%>">
+            <%=things[index].name%>
+        </option>
+        <%};%>
+
+    </select>
+</edit_space>
 <div id="thinginfo">
     divstuff
 
 </div>
 </body>
+
+
+
+
+
 </html>
 <script>
     function thingselected(e){
