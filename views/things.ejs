@@ -8,8 +8,8 @@
 <body onload="load()">
 <%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
 %>
-<select onChange="thingselected(this)">
-   <%for (index = 0; index < things.length; ++index) {%>
+<select id="selectedthing" onChange="thingselected(this)">
+    <%for (index = 0; index < things.length; ++index) {%>
     <option value="<%=index%>">
         <%=things[index].name%>
     </option>
@@ -23,23 +23,49 @@
 </body>
 </html>
 <script>
-function thingselected(e){
-    var x =document.getElementById("thinginfo");
-   var rv = '';
-    for (var prop in things[e.value]){
-       rv = rv + prop+":"+things[e.value][prop]+"<br>";
+    function thingselected(e){
+        var x =document.getElementById("thinginfo");
+        var rv = '<table>';
+        for (var prop in things[e.value]){
+
+            rv = rv +'<tr><td>'
+            rv=rv+'<button onclick="edititem('+e.value+','
+            rv=rv+"'"+prop+"'";
+            rv=rv +')">Edit</button>';
+
+//things[document.getElementById('selectedthing').value][newprop]= prompt("Enter Value")
+            rv=rv+ '</td><td>'+prop+'</td><td>'+things[e.value][prop]+'</td>'
+            //rv = rv + prop+":    <input type='text' id='"+prop+"' value = "+things[e.value][prop]+ "><br>";
 
 
-   }
+            rv = rv +'</tr>'
+
+        }
+        rv = rv +'</table>'
+        rv=rv+'<button onclick="addprop()">Add Proprerty</button>';
 
 
-    x.innerHTML =rv;
+        x.innerHTML =rv;
 
 
-}
+    }
+    function edititem(thingindex,prop){
+        things[thingindex][prop]= prompt("New Value");
+        thingselected(document.getElementById('selectedthing'));
+        //things['+e.value+'].'+prop+'= prompt()
+
+
+    }
+    function addprop(){
+        var newprop = prompt("Enter Name of New Property")
+        //var newval = prompt("Enter Value")
+        things[document.getElementById('selectedthing').value][newprop]= prompt("Enter Value")
+        thingselected(document.getElementById('selectedthing'));
+
+    }
     function load() {
         things=<%-JSON.stringify(things)%>
-                wsUri = "ws://" + window.location.hostname + ":8280";
+                wsUri = "ws://" + window.location.hostname + ":8080";
         ws = new ReconnectingWebSocket(wsUri);
         ws.onopen = function(evt){
             console.log("websocket connected")
@@ -50,9 +76,9 @@ function thingselected(e){
             if (x.object == "settings.things"){
                 things = x.data;
                 //new things object - do something?
-              //  location.reload();
+                //  location.reload();
 
-        }
+            }
         };
 
     }
