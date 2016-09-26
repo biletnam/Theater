@@ -1,0 +1,23 @@
+.editbutton{
+    margin-right: 1%;
+    float:right;
+    border-radius:5px;
+    font-weight: bold;
+    color: black;
+    background-color: plum;
+}
+
+.label{
+    font-weight: bold;
+    font-size: 110%;
+}
+
+#editspace{
+    background-color: lightgoldenrodyellow;
+    border-width: 2px;
+}
+
+#addbutton{
+    background-color: salmon;
+    font-size: 16px;
+}
