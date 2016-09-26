@@ -2,6 +2,7 @@
 <script src="/javascripts/reconnectingWebsocket.js"> </script>
 <script  src = "/javascripts/TheaterMenu.js"> </script>
 <link rel='stylesheet'  href='/stylesheets/Menu.css'>
+<link rel='stylesheet'  href='/stylesheets/things.css'>
 
 <head>
 
@@ -30,18 +31,19 @@
         </ul>
     </nav>
 </header>
+<div id = editspace>
+    <edit_space>
+        <label class = "label"> Please Select Item To Edit</label>
+        <select id="selectedthing" onChange="thingselected(this)">
+            <%for (index = 0; index < things.length; ++index) {%>
+            <option value="<%=index%>">
+                <%=things[index].name%>
+            </option>
+            <%};%>
 
-<edit_space>
-    <label > Please Select Item To Edit</label>
-    <select id="selectedthing" onChange="thingselected(this)">
-        <%for (index = 0; index < things.length; ++index) {%>
-        <option value="<%=index%>">
-            <%=things[index].name%>
-        </option>
-        <%};%>
-
-    </select>
-</edit_space>
+        </select>
+    </edit_space>
+</div>
 <div id="thinginfo">
     divstuff
 
@@ -60,7 +62,7 @@
         for (var prop in things[e.value]){
 
             rv = rv +'<tr><td>'
-            rv=rv+'<button onclick="edititem('+e.value+','
+            rv=rv+'<button type = "button"  class = "editbutton" onclick="edititem('+e.value+','
             rv=rv+"'"+prop+"'";
             rv=rv +')">Edit</button>';
 
@@ -73,7 +75,7 @@
 
         }
         rv = rv +'</table>'
-        rv=rv+'<button onclick="addprop()">Add Proprerty</button>';
+        rv=rv+'<button type = "button" class = "editbutton" id = "addbutton" onclick="addprop()">Add Proprerty</button>';
 
 
         x.innerHTML =rv;
