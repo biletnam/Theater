@@ -50,6 +50,21 @@ exports.savesettings = function(){
     });
 
 };
+exports.backupsettings = function(){
+    var backupsettings = settings;
+    delete backupsettings._id;
+    backupsettings.timestamp = new Date();
+    backupsettings.type='backupsettings';
+    db.collection('settings').insertOne(backupsettings,function(err,res){
+        //console.log('Gatherer Setting updated');
+        if (err){
+            console.log('failure writing settings to mongo -- aborting'+err);
+            // exit node with error
+            process.exit(1);
+        }
+    });
+
+};
 exports.getthingbyid = function(inid){
     var returnvalue = false;
 
