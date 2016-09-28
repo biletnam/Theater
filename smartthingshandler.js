@@ -2,7 +2,6 @@
  * Created by todd on 3/14/2016.
  */
 
-
 var request = require('request');
 
 
@@ -71,6 +70,8 @@ exports.stEvent =function(data){
         if (o){
             // found the object in the database
             console.log('Command from SmartThings for thing:'+ o.name);
+            data.object = "SmartthingsData";
+            websock.send(JSON.stringify(data)); //send data to home page logging
             if(o.issmartthingchild){
                 // child objject execute command
                 console.log('data.command:'+data.command);

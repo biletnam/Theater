@@ -21,8 +21,8 @@ exports.start = function(callback) {
 
     // this is the default webpage //localhost:port
     app.get('/', function (req, res) {
-     //   res.render('test.ejs', { title: 'LED' });
-        res.status(404).send('Sorry cant find that!');
+        res.render('home.ejs',{things:global.settings.things});
+       // res.status(404).send('Sorry cant find that!');
 
     });
     app.get('/test', function (req, res) {

@@ -22,6 +22,11 @@ function init() {
             //  location.reload();
 
         }
+        if (x.object == "SmartthingsData"){
+            writeToScreen(new Date().toLocaleString() + "  Device: " + x.device + "   Value: " + x.value + "   Name: " + x.name + "   Device ID: " + x.id);
+
+        }
+
     };
 
 }
