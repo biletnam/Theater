@@ -288,11 +288,14 @@ exports.mapExternalPorts = function(callback){
 // updated 0 to 999999 7/8/2016
             pmp.portMap(gateway,8282,8282,999999,'webservertheater',function(err,rslt){
                 if (err) {
-                    console.log('error opening port 3000', err);
+                    console.log('error opening port 8282', err);
                 }
                 else {
                     // updated 0 to 999999 7/8/2016
                     pmp.portMap(gateway, 8280, 8280, 999999, 'websocktheater', function (err, rslt) {
+                        if (err) {
+                            console.log('error opening port 8280', err);
+                        }
                         callback(gateway.externalIP);
 
                     });
