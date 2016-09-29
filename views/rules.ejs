@@ -1,0 +1,71 @@
+<html>
+<script src="/javascripts/reconnectingWebsocket.js"> </script>
+<script src="/javascripts/rulesejs.js"> </script>
+
+
+<head>
+
+
+</head>
+<body onload="load()">
+<%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
+%>
+<h2>Rules Editor</h2>
+<hr>
+Device
+<select id="selectedthing" onChange="populateeventlist(this)">
+   <%for (index = 0; index < things.length; ++index) {%>
+    <option value="<%=index%>">
+        <%=things[index].name+'('+things[index].label+')'%>
+    </option>
+    <%};%>
+
+</select>
+Events
+<select id='eventlist' onChange="eventselected(this)"> </select>
+
+<hr>
+<select id='rulelist' onChange="ruleclicked(this)" size=3  style="width:100%"> </select>
+<button onclick="buttondeleterule()">
+    Delete Rule</button>
+<button onclick=" buttonduplicaterule()">
+    Duplicate Rule</button>
+<button onclick="buttonnewrule()">New Rule</button>
+<hr>
+<div>
+    <div id="ruledisplay" style="width:400px;display:inline-block; ">
+        <textarea id="selectedruledisplay" rows="20" style="width:400px;"></textarea>
+
+        <button onclick="buttonsaverulechanges()">Save Rule Changes</button>
+    </div>
+    <div id="thingdisplay" style="width:400px;display:inline-block;vertical-align:top">
+
+        <textarea id="selectedthingdisplay" rows="20" style="width:400px;"></textarea>
+    </div>
+</div>
+    <hr>
+<textarea id="eventsforthisdevice" rows="10" cols="100">
+
+
+</textarea>
+
+<div id="thinginfo">
+    divstuff
+
+</div>
+</body>
+</html>
+<script>
+    rules=[];
+    saveselectedrule=false;
+    ws=false;
+    function load() {
+        things=<%-JSON.stringify(things)%>
+                populateeventlist(document.getElementById('selectedthing'));
+
+        wsUri = "ws://" + window.location.hostname + ":8080";
+       websockstart();
+    }
+
+
+</script>

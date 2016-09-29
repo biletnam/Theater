@@ -40,6 +40,16 @@ exports.wsData =  function(data,id){
       //      websocketsend("executecommand",{command:things[i].commands[0],object:things[i],value:level});
       ll.executecommand(data.data.object,data.data.command,data.data.value);
       console.log(data.data.object  )
+  } else if (data.type == 'saveprop') {
+      ll.getthingbyid(data.data.id)[data.data.prop] = data.data.value;
+      console.log('saveprop',ll.getthingbyid(data.data.id)[data.data.prop],data.data.value)
+      ll.savesettings();
+
+
+  } else if (data.type == 'rules') {
+      rp.inwebsocket(data.data,id)
+
+
   }
 
   else

@@ -78,7 +78,8 @@ exports.stEvent =function(data){
                 console.log('data.value:'+data.value);
 
                 ll.executecommand(o,data.command,data.value);
-                //serial.write("VLC 1 65 1 0 0\r");
+                // call the rule processor to do execute additional commands based on the event
+                rp.event(o.id,data.command,data.value,data,'smartthingscommand');
 
             } else{
                 // not a child so incoming is a status change
@@ -92,6 +93,12 @@ exports.stEvent =function(data){
                     console.log('Data from '+tempname+' is being reporting to device:'+ o.name);
 
                 }
+
+                // call the rule processor to do execute additional commands based on the event
+
+                rp.event(o.id,data.name,data.value,data,'smartthingscommand');
+
+
                 /*
                  // check to see if this device is using power as an switch
 

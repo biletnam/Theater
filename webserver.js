@@ -25,6 +25,9 @@ exports.start = function(callback) {
        // res.status(404).send('Sorry cant find that!');
 
     });
+    app.get('/rules', function (req, res) {
+        res.render('rules.ejs',{things:global.settings.things});
+    });
     app.get('/test', function (req, res) {
         res.render('test.ejs');
     });

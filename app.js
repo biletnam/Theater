@@ -8,7 +8,7 @@
 
 //Initialization Section
 // ll - llib is the local library
-
+rp = require('./ruleprocessor');
 ll = require('./llib.js');
 // start mongo and load a settings object - passing the database name , and a call back
 ll.startmongo('theatersettings',mongostarted);
