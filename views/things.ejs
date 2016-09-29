@@ -1,59 +1,26 @@
 <html>
 <script src="/javascripts/reconnectingWebsocket.js"> </script>
-<script  src = "/javascripts/TheaterMenu.js"> </script>
-<link rel='stylesheet'  href='/stylesheets/Menu.css'>
-<link rel='stylesheet'  href='/stylesheets/things.css'>
 
 <head>
 
 
 </head>
-
-
-
 <body onload="load()">
 <%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
 %>
+<select id="selectedthing" onChange="thingselected(this)">
+    <%for (index = 0; index < things.length; ++index) {%>
+    <option value="<%=index%>">
+        <%=things[index].name+'('+things[index].label+')'%>
+    </option>
+    <%};%>
 
-<header class="mainheader">
-    <div id="menubutton">
-        <button id = "buttonMenu"  onmousedown = "buttonMenu()"><span id="buttontext">|||</span></button>
-    </div>
-    <nav id = "menunav">
-        <ul>
-            <li><a href="Home">Home</a></li>
-            <li><a href="Lights" >Lights</a></li>
-            <li><a href="SmartThings" >SmartThings</a></li>
-            <li><a href="Harmony">Harmony</a></li>
-            <li><a href="TheaterSettings">Settings</a></li>
-            <li class="active"><a href="Things">Things</a></li>
-            <li><a href="./images/TheaterHelp.pdf" target="_blank">Help</a></li>
-        </ul>
-    </nav>
-</header>
-<div id = editspace>
-    <edit_space>
-        <label class = "label"> Please Select Item To Edit</label>
-        <select id="selectedthing" onChange="thingselected(this)">
-            <%for (index = 0; index < things.length; ++index) {%>
-            <option value="<%=index%>">
-                <%=things[index].name%>
-            </option>
-            <%};%>
-
-        </select>
-    </edit_space>
-</div>
+</select>
 <div id="thinginfo">
     divstuff
 
 </div>
 </body>
-
-
-
-
-
 </html>
 <script>
     function thingselected(e){
@@ -62,7 +29,7 @@
         for (var prop in things[e.value]){
 
             rv = rv +'<tr><td>'
-            rv=rv+'<button type = "button"  class = "editbutton" onclick="edititem('+e.value+','
+            rv=rv+'<button onclick="edititem('+e.value+','
             rv=rv+"'"+prop+"'";
             rv=rv +')">Edit</button>';
 
@@ -75,7 +42,9 @@
 
         }
         rv = rv +'</table>'
-        rv=rv+'<button type = "button" class = "editbutton" id = "addbutton" onclick="addprop()">Add Proprerty</button>';
+        rv=rv+'<button onclick="addprop()">Add Proprerty String</button>';
+        rv=rv+'<button onclick="addpropobject()">Add Proprerty Object</button>';
+
 
 
         x.innerHTML =rv;
@@ -86,6 +55,7 @@
         things[thingindex][prop]= prompt("New Value");
         thingselected(document.getElementById('selectedthing'));
         //things['+e.value+'].'+prop+'= prompt()
+        websocketsend('saveprop',{id:things[thingindex].id,prop:prop,value:things[thingindex][prop]})
 
 
     }
@@ -94,6 +64,15 @@
         //var newval = prompt("Enter Value")
         things[document.getElementById('selectedthing').value][newprop]= prompt("Enter Value")
         thingselected(document.getElementById('selectedthing'));
+        websocketsend('saveprop',{id:things[document.getElementById('selectedthing').value].id,prop:newprop,value:things[document.getElementById('selectedthing').value][newprop]})
+
+    }
+    function addpropobject(){
+        var newprop = prompt("Enter Name of New Property")
+        //var newval = prompt("Enter Value")
+        things[document.getElementById('selectedthing').value][newprop]=eval(prompt("Enter Value"));
+        thingselected(document.getElementById('selectedthing'));
+        websocketsend('saveprop',{id:things[document.getElementById('selectedthing').value].id,prop:newprop,value:things[document.getElementById('selectedthing').value][newprop]});
 
     }
     function load() {
@@ -113,6 +92,7 @@
 
             }
         };
+        thingselected(document.getElementById('selectedthing'));
 
     }
 
