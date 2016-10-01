@@ -239,7 +239,7 @@ exports.executecommand = function(obj,commandname,value,delay){
                         request_options.json = {
                             id: o.stid,// vantage light aa look at me
                             // this command
-                            command:command,
+                            command:commandname,
 
                             value: body.value
                             // value: evt[4]
