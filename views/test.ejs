@@ -6,43 +6,77 @@
 
 </head>
 <body onload="load()">
-Test<br>
+<%       things.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
+%>
+<select id="selectedthing" onChange="thingselected(this)">
+    <%for (index = 0; index < things.length; ++index) {%>
+    <option value="<%=index%>">
+        <%=things[index].name+'('+things[index].label+')'%>
+    </option>
+    <%};%>
 
-<Table>
+</select>
+<div id="thinginfo">
+    divstuff
 
-
-    <tr>
-        <td>Name</td>
-        <td>State</td>
-        <td>Total on-time</td>
-        <td>kwh</td>
-        <td>timecurrentstate</td>
-        <td>timecurrentstate</td>
-
-    </tr>
-
-
-<%var things = global.settings.things;
-things.forEach(function(e){%>
-  <tr>
-      <td><%=((e.label) ? e.label : e.name)%></td>
-      <td><%=((e.currentstate && e.currentstate != 0) ? e.currentstate : "")%></td>
-      <td><%=((e.totalontime)? (e.totalontime/(60)).toFixed(1): '-')%></td>
-      <td><%=((e.kwhours)? (e.kwhours*1).toFixed(1) : '-')%></td>
-      <td><%=((e.currentstatetime) ? ((new Date() - e.currentstatetime.getTime())/3600000).toFixed(1):"")%></td>
-  </tr>
-
-
-
-
-<%})%>
-</Table>
+</div>
 </body>
 </html>
 <script>
+    function thingselected(e){
+        var x =document.getElementById("thinginfo");
+        var rv = '<table>';
+        for (var prop in things[e.value]){
 
+            rv = rv +'<tr><td>'
+            rv=rv+'<button onclick="edititem('+e.value+','
+            rv=rv+"'"+prop+"'";
+            rv=rv +')">Edit</button>';
+
+//things[document.getElementById('selectedthing').value][newprop]= prompt("Enter Value")
+            rv=rv+ '</td><td>'+prop+'</td><td>'+things[e.value][prop]+'</td>'
+            //rv = rv + prop+":    <input type='text' id='"+prop+"' value = "+things[e.value][prop]+ "><br>";
+
+
+            rv = rv +'</tr>'
+
+        }
+        rv = rv +'</table>'
+        rv=rv+'<button onclick="addprop()">Add Proprerty String</button>';
+        rv=rv+'<button onclick="addpropobject()">Add Proprerty Object</button>';
+
+
+
+        x.innerHTML =rv;
+
+
+    }
+    function edititem(thingindex,prop){
+        things[thingindex][prop]= prompt("New Value");
+        thingselected(document.getElementById('selectedthing'));
+        //things['+e.value+'].'+prop+'= prompt()
+        websocketsend('saveprop',{id:things[thingindex].id,prop:prop,value:things[thingindex][prop]})
+
+
+    }
+    function addprop(){
+        var newprop = prompt("Enter Name of New Property")
+        //var newval = prompt("Enter Value")
+        things[document.getElementById('selectedthing').value][newprop]= prompt("Enter Value")
+        thingselected(document.getElementById('selectedthing'));
+        websocketsend('saveprop',{id:things[document.getElementById('selectedthing').value].id,prop:newprop,value:things[document.getElementById('selectedthing').value][newprop]})
+
+    }
+    function addpropobject(){
+        var newprop = prompt("Enter Name of New Property")
+        //var newval = prompt("Enter Value")
+        things[document.getElementById('selectedthing').value][newprop]=eval(prompt("Enter Value"));
+        thingselected(document.getElementById('selectedthing'));
+        websocketsend('saveprop',{id:things[document.getElementById('selectedthing').value].id,prop:newprop,value:things[document.getElementById('selectedthing').value][newprop]});
+
+    }
     function load() {
-        things=<%-JSON.stringify(global.settings.things)%>
+        things=<%-JSON.stringify(things)%>
                 wsUri = "ws://" + window.location.hostname + ":8082";
         ws = new ReconnectingWebSocket(wsUri);
         ws.onopen = function(evt){
@@ -54,10 +88,11 @@ things.forEach(function(e){%>
             if (x.object == "settings.things"){
                 things = x.data;
                 //new things object - do something?
-                location.reload();
+                //  location.reload();
 
-        }
+            }
         };
+        thingselected(document.getElementById('selectedthing'));
 
     }
 

@@ -6,7 +6,8 @@ exports.event = function(id,event,val,eventdata,source){
     console.log('ruleprocessor id:'+id+' event:'+event +'eventdata:'+JSON.stringify(eventdata));
 
 
-    db.collection('rules').find({"id":id,$or:[{"event":'all'},{"event":event}],$or:[{"source":'any'},{"source":source}]}).toArray(function(err,rules){
+    //db.collection('rules').find({"id":id,$or:[{"event":'all'},{"event":event}],$or:[{"source":'any'},{"source":source}]}).toArray(function(err,rules){
+    db.collection('rules').find({"id":id,$or:[{"event":'all'},{"event":event}]}).toArray(function(err,rules){
         if (err){
             console.log('error search rules database');
             return;
@@ -22,8 +23,10 @@ exports.event = function(id,event,val,eventdata,source){
 
             if (rule.conditions){
                 console.log('evaluating:'+rule.conditions);
-                if (typeof(rule.conditions == "string")){
-                    oktorunrule =eval(rule.conditions);
+                if (typeof(rule.conditions) == "string"){
+                    oktorunrule =eval(rule.conditions+';');
+
+
                 }
                 // add iteration if conditions is an object
 
@@ -43,7 +46,7 @@ exports.event = function(id,event,val,eventdata,source){
                     if (cmd.id){var o = ll.getthingbyid(cmd.id)}
                     else if (cmd.label) {var o = ll.getthingbylabel(cmd.label)}
                     if (o){
-                        ll.executecommand(o,cmd.command,cmd.value,cmd.delay);
+                        ll.executecommand(o,cmd.name,cmd.value,cmd.delay);
                     } else
                     {
                         console.log('object not found for '+rule.description)
@@ -92,6 +95,40 @@ exports.inwebsocket = function(data,websocketid){
     if (data.instruction){
         // could I make this any more complicated?
         switch(data.instruction){
+            case "savecommands":
+                //console.log(JSON.stringify(data));
+                var o = ll.getthingbyid(data.id);
+                // replace all the commands with the new ones we received
+                o.commands = data.commands
+                ll.writething(o,true);
+                websock.send(JSON.stringify({object:"popup",text:"Command Saved"}),websocketid);
+
+                break;
+            case "runcommand":
+                //console.log(JSON.stringify(data));
+                ll.executecommand(data.obj,data.command,data.value,data.delay);
+
+                break;
+            case "showpastevents":
+                //console.log(JSON.stringify(data));
+                db.collection('events').find({id:data.id},{limit:25}).sort({time: -1}).toArray(function(err,rslt){
+                    if(!err){
+                        //   console.log('888'+{object:"eventhistory",eventhistory:rslt})
+                        websock.send(JSON.stringify({object:"eventhistory",eventhistory:rslt}),websocketid);
+                    } else {
+                        console.log('error updating'+err);
+                    }
+
+
+                });
+
+
+
+                break;
+            case "runevent":
+                rp.event(data.event.id,data.event.event,data.event.val,data.event.eventdata,data.event.source)
+
+                break;
             case "newrule":
                 //console.log(JSON.stringify(data));
                 db.collection('rules').insertOne(data.rule,function(err,rslt){

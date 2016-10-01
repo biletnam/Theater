@@ -148,9 +148,9 @@ exports.writething = function(obj,savesettings,dontmerge){
     }
 
 };
-exports.executecommand = function(obj,command,value,delay){
+exports.executecommand = function(obj,commandname,value,delay){
     if (delay){
-        setTimeout(function(obj,command,value){ll.executecommand(obj,command,value)},delay,obj,command,value);
+        setTimeout(function(obj,commandname,value){ll.executecommand(obj,command,value)},delay,obj,command,value);
 
 
         console.log('delay command');
@@ -167,29 +167,34 @@ exports.executecommand = function(obj,command,value,delay){
 
 
     var cmd = false;
+    /* modified to allow passing of obects for the command*/
+    if (typeof(commandname) == "object"){
+        cmd = commandname;
+    } else
+    {
+        obj.commands.some(function(e) {
+            if (e.name == commandname) {
+                cmd = e;
+                return true;
+            }
+        });
 
-   // console.log("execute command:"+command+" val:"+value+' name:'+obj.name);
-    obj.commands.some(function(e) {
-        if (e.name == command) {
-            cmd = e;
-            return true;
-        }
-
-
-    });
+    }
+    console.log("execute command:"+cmd.name+" val:"+value+' name:'+obj.name);
     if (cmd){
         if (cmd.sendto == 'vantage'){
             serial.write(cmd.command.replace("{value}",value));
 
-        } else if (cmd.sendto == "smartthings"){
-//
+        } else
+        if (cmd.sendto == "smartthings"){
+
             var request_options = {
                 headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}
             };
             request_options.uri = stsettings.restUri+ '/update';
             request_options.json = {
                 id: obj.stid,// vantage light aa look at me
-                command: command,
+                command: cmd.command,
                 value: Number(value)
             };
             request(request_options,function(error, response, body){
@@ -207,7 +212,7 @@ exports.executecommand = function(obj,command,value,delay){
 
 
 
-        } else if (cmd.sendto == "RGBLED")
+        }else if (cmd.sendto == "RGBLED")
         {
             console.log(cmd)
             request_options = {}
@@ -228,12 +233,12 @@ exports.executecommand = function(obj,command,value,delay){
                     if (o.issmartthingchild) {
                         //
                         var request_options = {
-                            headers: { Authorization: 'Bearer ' + settings.stsettings.smartthingsoauthtoken}
+                            headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}
                         };
                         request_options.uri = stsettings.restUri+ '/update';
                         request_options.json = {
                             id: o.stid,// vantage light aa look at me
-                           // this command
+                            // this command
                             command:command,
 
                             value: body.value
@@ -267,14 +272,147 @@ exports.executecommand = function(obj,command,value,delay){
 
 
 
-    } else {
-
-        console.log ('command not found:'+command)
-        console.log ('object:'+obj.name)
     }
 
 
 };
+
+
+
+
+// exports.executecommand = function(obj,command,value,delay){
+//     if (delay){
+//         setTimeout(function(obj,command,value){ll.executecommand(obj,command,value)},delay,obj,command,value);
+//
+//
+//         console.log('delay command');
+//         return;
+//     }
+//     console.log('exec command');
+//
+//     if (typeof(obj) != "object"){
+//         obj=this.getthingbyid(obj);
+//     }
+//
+//
+//     var cmd = false;
+//
+//    // console.log("execute command:"+command+" val:"+value+' name:'+obj.name);
+//     /* modified to allow passing of obects for the command*/
+//     if (typeof(command) == "object"){
+//         cmd = command;
+//         command = cmd.command;
+//
+//     } else
+//     {
+//         obj.commands.some(function(e) {
+//             if (e.name == command) {
+//                 cmd = e;
+//                 return true;
+//             }
+//         });
+//
+//     }
+//     console.log("execute command:"+cmd.name+" val:"+value+' name:'+obj.name);
+//
+//     if (cmd){
+//         if (cmd.sendto == 'vantage'){
+//             serial.write(cmd.command.replace("{value}",value));
+//
+//         } else if (cmd.sendto == "smartthings"){
+// //
+//             var request_options = {
+//                 headers: { Authorization: 'Bearer ' + stsettings.smartthingsoauthtoken}
+//             };
+//             request_options.uri = stsettings.restUri+ '/update';
+//             request_options.json = {
+//                 id: obj.stid,// vantage light aa look at me
+//                 command: command,
+//                 value: Number(value)
+//             };
+//             request(request_options,function(error, response, body){
+//                 console.log('command sent to StartThings');
+//             });
+//
+//             //
+//
+//         } else if (cmd.sendto == "logitec-harmony"){
+//
+//             console.log('command sent to harmony');
+//             hc.sendcommand2(cmd.command);
+//
+//
+//
+//
+//
+//         } else if (cmd.sendto == "RGBLED")
+//         {
+//             console.log(cmd)
+//             request_options = {}
+//             request_options.uri = cmd.sendtoaddress;
+//             request_options.json = cmd.command;
+//             request_options.json.led = 2
+//             request_options.json.value = value;
+//             request_options.json.obj = obj;
+//
+//             // send the command to our RGB Controller
+//             request(request_options,function(error, response, body){
+//                 // we get here if the RBG server reponds or it errors out
+//                 if (body){
+//                     // if we get a body the server responded
+//                     console.log('command sent to RGBLED');
+//                     //console.log(body.command);
+//                     var o = body.obj;
+//                     if (o.issmartthingchild) {
+//                         //
+//                         var request_options = {
+//                             headers: { Authorization: 'Bearer ' + settings.stsettings.smartthingsoauthtoken}
+//                         };
+//                         request_options.uri = stsettings.restUri+ '/update';
+//                         request_options.json = {
+//                             id: o.stid,// vantage light aa look at me
+//                            // this command
+//                             command:command,
+//
+//                             value: body.value
+//                             // value: evt[4]
+//                         };
+//
+//
+//                         request(request_options,function(error, response, body){
+//
+//                             console.log('Sent status change to SmartThings for:'+ o.name+' Response:'+JSON.stringify(body));
+//
+//
+//
+//
+//                         });
+//                         //
+//                     }
+//                 }
+//
+//
+//             });
+//
+//
+//
+//
+//         } else
+//         {
+//             console.log('unknown sendto:'+sendto)
+//
+//         }
+//
+//
+//
+//     } else {
+//
+//         console.log ('command not found:'+command)
+//         console.log ('object:'+obj.name)
+//     }
+//
+//
+// };
 
 exports.mapExternalPorts = function(callback){
     var pmp = require('pmp');

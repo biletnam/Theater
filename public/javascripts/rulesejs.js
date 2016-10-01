@@ -1,9 +1,42 @@
 var eventhistory = [];
 
+function buttonshowpastevents(){
+    websocketsend('rules',{instruction:'showpastevents',id:o.id});
+
+
+}
+function incomingeventlistclicked(e){
+    document.getElementById("selectedeventdisplay").value=JSON.stringify(eventhistory[e.value],null,4);
+
+
+    JSON.stringify( document.getElementById("selectedeventdisplay").value)
+
+}
+function displayincomingevents(){
+    sel = document.getElementById("incomingeventlist");
+    removeOptions(sel);
+    for (var i = 0; i < eventhistory.length; i++) {
+
+        var el = document.createElement("option");
+        // todo add more detail and better formating
+        el.textContent = eventhistory[i].event+' ('+eventhistory[i].val+') '+eventhistory[i].source;
+        el.value = i;
+        sel.appendChild(el);
+
+
+    }
+}
+function buttonsimulateevent(){
+    websocketsend('rules',{instruction:'runevent',event:JSON.parse( document.getElementById("selectedeventdisplay").value)});
+    //  websocketsend('rules',{instruction:'runevent',event:eventhistory[document.getElementById('incomingeventlist').value]});
+
+
+
+}
 function eventselected(e){
     websocketsend('rules',{instruction:'lookuprule',id:o.id,events:e.value});
     document.getElementById("selectedruledisplay").value='';
-    document.getElementById("selectedthingdisplay").value='';
+
 
 }
 function buttonsaverulechanges(){
@@ -31,9 +64,7 @@ function buttonnewrule(){
         description:"New Rule for "+o.name,
         conditions:[""],
         commandstoexecute:[{}]
-
-
-    }
+    };
     console.log(newrule)
     websocketsend('rules',{instruction:'newrule',rule:newrule});
 
@@ -41,6 +72,7 @@ function buttonnewrule(){
 
 function buttondeleterule(){
     websocketsend('rules',{instruction:'deleterule',rule:rules[document.getElementById('rulelist').value]});
+    document.getElementById("selectedruledisplay").value = '';
 }
 
 function buttonduplicaterule(){
@@ -53,18 +85,15 @@ function displayevents(){
 }
 function ruleclicked(e){
     document.getElementById("selectedruledisplay").value=JSON.stringify(rules[e.value],null,4);
-    document.getElementById("selectedthingdisplay").value=JSON.stringify(getthingbyid(rules[e.value].id),null,4);
 
 
 }
 function populateruleslist(){
     var includeevent = false;
     if ( document.getElementById("eventlist").value == 'any')
-            {
-         includeevent = true
-            }
-
-
+    {
+        includeevent = true
+    }
     sel = document.getElementById("rulelist")
     removeOptions(sel)
 
@@ -91,8 +120,49 @@ function populateruleslist(){
     }
 
 }
+
+function populatecommandlist(e){
+    // command object
+    co = things[e.value];
+    if (!co.events){co.events ={}}
+    sel = document.getElementById("commandlist")
+    removeOptions(sel)
+
+    if (co.commands){
+
+        for (var i = 0; i < co.commands.length; i++) {
+            var el = document.createElement("option");
+            el.textContent = co.commands[i].name;
+            el.value = i;
+            sel.appendChild(el);
+        }
+
+
+    }
+    // this will fill the viewcommand box
+    commandclicked();
+    // go ahead and show everything
+
+};
+function commandclicked(){
+    e = document.getElementById("commandlist");
+    document.getElementById("viewcommand").value = JSON.stringify(co.commands[e.value],null,4);
+
+
+}
+function buttonruncommand(){
+    // todo add delay field
+    websocketsend('rules',{instruction:'runcommand',obj:co,command:JSON.parse( document.getElementById("viewcommand").value),
+        value: document.getElementById("commandvalue").value,delay:0});
+    //  websocketsend('rules',{instruction:'runevent',event:eventhistory[document.getElementById('incomingeventlist').value]});
+
+
+
+}
 function populateeventlist(e){
     o = things[e.value];
+    document.getElementById("selectedthingdisplay").value=JSON.stringify(o,null,4);
+
     if (!o.events){o.events ={}}
     sel = document.getElementById("eventlist")
     removeOptions(sel)
@@ -119,8 +189,10 @@ function populateeventlist(e){
 
     }
     // go ahead and show everything
+    document.getElementById("selectedthingdisplay").value=JSON.stringify(o,null,4);
+
     if (ws){
-       // console.log('eventse')
+        // console.log('eventse')
         eventselected(document.getElementById("eventlist"));
     }
 };
@@ -147,10 +219,18 @@ function websockstart(){
             //unshift is like push, but adds to the top
             eventhistory.unshift(x.data);
             displayevents();
-        }if(x.object == "refreshrules"){
+            displayincomingevents();
+        } else if(x.object == "refreshrules"){
             // if we add or delete or modify a rule the server tells us its done and then we ask it to refresh the info
             websocketsend('rules',{instruction:'lookuprule',id:o.id,events:document.getElementById('eventlist').value});
 
+        } else if(x.object == "eventhistory"){
+            eventhistory = x.eventhistory;
+            //console.log(eventhistory);
+            displayincomingevents();
+
+        }else if(x.object == "popup"){
+            alert(x.text);
         }
     };
 
@@ -199,3 +279,42 @@ function getthingbyid (inid){
 
     return returnvalue;
 };
+function buttonnaddtorule(){
+//grab the rule from the textbox and convert it to an object
+
+    var appendedrule = JSON.parse(document.getElementById('selectedruledisplay').value)
+    var command = JSON.parse( document.getElementById("viewcommand").value);
+    appendedrule.commandstoexecute.unshift({id:co.id,name:command.name,value:document.getElementById("commandvalue").value,delay:0});
+    document.getElementById("selectedruledisplay").value=JSON.stringify(appendedrule,null,4);
+}
+function buttonnewcommand(){
+    var name = prompt("Enter Command Name");
+    var ncmd = {name:name,desciption:"Enter a clear description of the command",sendto:"",command:"",valuedescription:"Enter the values this command takes"}
+    co.commands.push(ncmd); // add this to the commands list
+    websocketsend('rules',{instruction:'savecommands',id:co.id,commands:co.commands});
+    // update things with the new command
+    things[document.getElementById("selectedthingcommand").value].commands = co.commands;
+    populatecommandlist(document.getElementById("selectedthingcommand"));
+    document.getElementById("commandlist").value = co.commands.length-1;
+    commandclicked();
+}
+function buttonsavecommand(){
+    // grab the info from the command box and make it an object
+    var command = JSON.parse( document.getElementById("viewcommand").value);
+    //put the new object into the command array
+    co.commands[document.getElementById("commandlist").value] = command
+    // save it
+    websocketsend('rules',{instruction:'savecommands',id:co.id,commands:co.commands});
+}
+function buttondeletecommand(){
+    // delete the item out of the things.commands array
+    things[document.getElementById("selectedthingcommand").value].commands.splice(document.getElementById("commandlist").value,1);
+    co =things[document.getElementById("selectedthingcommand").value];
+
+    websocketsend('rules',{instruction:'savecommands',id:co.id,commands:co.commands});
+    // update things with the new command
+    //  things[document.getElementById("selectedthingcommand").value].commands = co.commands;
+    populatecommandlist(document.getElementById("selectedthingcommand"));
+    document.getElementById("commandlist").value = co.commands.length-1;
+    commandclicked();
+}
