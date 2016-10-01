@@ -14,9 +14,9 @@
 <hr>
 Device
 <select id="selectedthing" onChange="populateeventlist(this)">
-   <%for (index = 0; index < things.length; ++index) {%>
+    <%for (index = 0; index < things.length; ++index) {%>
     <option value="<%=index%>">
-        <%=things[index].name+'('+things[index].label+')'%>
+        <%=((things[index].name!=things[index].label) && things[index].label)?things[index].label+' ('+things[index].name+')':things[index].name%>
     </option>
     <%};%>
 
@@ -39,14 +39,51 @@ Events
         <button onclick="buttonsaverulechanges()">Save Rule Changes</button>
     </div>
     <div id="thingdisplay" style="width:400px;display:inline-block;vertical-align:top">
-
         <textarea id="selectedthingdisplay" rows="20" style="width:400px;"></textarea>
     </div>
+    <div id="eventdisplay" style="width:400px;display:inline-block;vertical-align:top">
+        <textarea id="selectedeventdisplay" rows="20" style="width:400px;"></textarea>
+        <button onclick="buttonsimulateevent()">Simulate Event</button>
+
+    </div>
+
 </div>
-    <hr>
-<textarea id="eventsforthisdevice" rows="10" cols="100">
+
+<hr>
+
+<select id='incomingeventlist' onChange="incomingeventlistclicked(this)" size=5  style="width:100%"> </select>
+<button onclick="buttonshowpastevents()">Show Past Events</button>
+<hr>
+<!--Commands Section-->
+Commands:
+Device:
+<select id="selectedthingcommand" onChange="populatecommandlist(this)">
+    <%for (index = 0; index < things.length; ++index) {%>
+    <option value="<%=index%>">
+
+        <%=((things[index].name!=things[index].label) && things[index].label)?things[index].label+' ('+things[index].name+')':things[index].name%>
+    </option>
+    <%};%>
+
+</select>
+<hr>
+<div>
+
+    <select id='commandlist' onChange="commandclicked()" size=1  style="width:150"> </select>
+    <textarea id="viewcommand" rows="7" cols="122" ></textarea>
+
+    value <textarea id="commandvalue" rows="1" cols="15" ></textarea>
+    <button onclick="buttonruncommand()">Run Command</button>
+    <button onclick="buttondeletecommand()">Delete Command</button>
+    <button onclick="buttonnewcommand()">New Command</button>
+    <button onclick="buttonsavecommand()">Save Command Changes</button>
+    <button onclick="buttonnaddtorule()">Add to rule</button>
 
 
+</div>
+<hr>
+
+<textarea id="eventsforthisdevice" rows="5" cols="50">
 </textarea>
 
 <div id="thinginfo">
@@ -62,9 +99,9 @@ Events
     function load() {
         things=<%-JSON.stringify(things)%>
                 populateeventlist(document.getElementById('selectedthing'));
-
+        populatecommandlist(document.getElementById('selectedthingcommand'))
         wsUri = "ws://" + window.location.hostname + ":8280";
-       websockstart();
+        websockstart();
     }
 
 
